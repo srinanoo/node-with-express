@@ -45,16 +45,16 @@ router.get('/', (req, res)=> {
         console.log("Database Connected!");
         // console.log(conn);
 
-        let collections = await conn.listCollections().toArray();
-        let collectionNames = collections.map(c => c.name);
+        // let collections = await conn.listCollections().toArray();
+        // let collectionNames = collections.map(c => c.name);
 
-        if(!collectionNames.includes("studentsDetails")) {
-            conn.createCollection("studentsDetails", (err, res)=> {
-                if(err) throw err;
-                console.log("Collection is created!");
-                // console.log(res);
-            });
-        }
+        // if(!collectionNames.includes("studentsDetails")) {
+        //     conn.createCollection("studentsDetails", (err, res)=> {
+        //         if(err) throw err;
+        //         console.log("Collection is created!");
+        //         // console.log(res);
+        //     });
+        // }
 
         conn.collection("studentsDetails").insertOne({name: "Dinesh", active: true, subject: "JS"}, (err, res1)=> {
             if(err) throw err;
