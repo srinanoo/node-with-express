@@ -83,7 +83,7 @@ router.get('/show', (req, res)=> {
     // console.log(conn);
     conn.connectToServer((err) => {
         if(err) throw err;
-        conn.getDb().collection("studentsDetails").find({}).toArray((err1, res1)=> {
+        conn.getDb().collection("newCollection").find({}).toArray((err1, res1)=> {
             if(err1) throw err1;
             res.send(res1);
             console.log(res1);
@@ -92,7 +92,34 @@ router.get('/show', (req, res)=> {
 });
 
 router.get('/create', (req, res)=> {
-    res.send("This is the main students route to create Students");
+    conn.connectToServer((err) => {
+        if(err) throw err;
+        conn.getDb().collection("anotherCollection").insertOne({name: "Dinesh", active: true}, (err1, res1)=> {
+            if(err1) throw err1;
+            res.send(res1);
+            console.log(res1);
+        });
+    });
+});
+
+router.get('/createCollection', (req, res)=> {
+    conn.connectToServer(async (err) => {
+        if(err) throw err;
+
+        let dbConn = conn.getDb();
+
+        let collections = await dbConn.listCollections().toArray();
+        let collectionNames = collections.map(c => c.name);
+
+        if(!collectionNames.includes("collection4")) {
+            dbConn.createCollection("collection4", (err1, res1)=> {
+                if(err1) throw err1;
+                console.log(res1);
+                console.log("Collection is created!");
+                res.end();
+            });
+        }
+    });
 });
 
 module.exports = router;
