@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 // const conn = require('../dbConfig').connectDB();
 require('dotenv').config();
-const mongo = require('mongodb').MongoClient;
-// const conn = require('../dbConfig');
+// const mongo = require('mongodb').MongoClient;
+const conn = require('../dbConfig');
 
 // let conn;
 
@@ -65,23 +65,30 @@ router.get('/', (req, res)=> {
 });
 
 router.get('/show', (req, res)=> {
-    mongo.connect(process.env.DB_URL, async (err, db) => {
-        if(err) throw err;
+    // mongo.connect(process.env.DB_URL, async (err, db) => {
+    //     if(err) throw err;
     
-        // connect or create database
-        let conn = db.db("studentsNew");
-        console.log("Database Connected!");
-        // console.log(conn);
+    //     // connect or create database
+    //     let conn = db.db("studentsNew");
+    //     console.log("Database Connected!");
+    //     // console.log(conn);
 
-        conn.collection("newCollection").find({}).toArray((err, res1)=> {
-            if(err) throw err;
+    //     conn.collection("newCollection").find({}).toArray((err, res1)=> {
+    //         if(err) throw err;
+    //         res.send(res1);
+    //         console.log(res1);
+    //     });
+    // }); 
+
+    // console.log(conn);
+    conn.connectToServer((err) => {
+        if(err) throw err;
+        conn.getDb().collection("studentsDetails").find({}).toArray((err1, res1)=> {
+            if(err1) throw err1;
             res.send(res1);
             console.log(res1);
         });
-    }); 
-
-    // let conn1 = conn.connectDB();
-    // console.log(conn1);
+    });
 });
 
 router.get('/create', (req, res)=> {
