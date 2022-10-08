@@ -32,7 +32,7 @@ let conn;
 module.exports = {
     connectToServer: function( callback ) {
         mongo.connect( process.env.DB_URL, ( err, db ) => {
-            conn = db.db("studentsNew");
+            conn = db.db("students");
             return callback( err );
         } );
     },

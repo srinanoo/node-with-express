@@ -1,12 +1,23 @@
 const express = require('express');
 const router = express.Router();
+const TeacherController = require('../controllers/teachersController');
 
-router.get('/show', (req, res)=> {
-    res.send("This is the main Teachers route");
-});
+// Login
+router.post('/login', TeacherController.Login);
 
-router.get('/create', (req, res)=> {
-    res.send("This is the main Teacher route to create Teachers");
-});
+// Logout
+router.post('/logout', TeacherController.Logout);
+
+// Create/Insert
+router.post('/createTeacher', TeacherController.createTeacher);
+
+// View/Find
+router.post('/findTeacher', TeacherController.findTeacher);
+
+// Update
+router.post('/updateTeacher', TeacherController.updateTeacher);
+
+// Remove/Delete
+router.post('/deleteTeacher', TeacherController.deleteTeacher);
 
 module.exports = router;

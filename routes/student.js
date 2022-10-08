@@ -91,6 +91,19 @@ router.get('/show', (req, res)=> {
     });
 });
 
+router.get('/show/:name', (req, res)=> {
+    // console.log(conn);
+    conn.connectToServer((err) => {
+        if(err) throw err;
+        console.log(req.params.name);
+        conn.getDb().collection("newCollection").find({$or: [{name: req.params.name}, {subject: req.params.name}]}).toArray((err1, res1)=> {
+            if(err1) throw err1;
+            res.send(res1);
+            console.log(res1);
+        });
+    });
+});
+
 router.get('/create', (req, res)=> {
     conn.connectToServer((err) => {
         if(err) throw err;
@@ -101,6 +114,100 @@ router.get('/create', (req, res)=> {
         });
     });
 });
+
+router.post('/insertDetails', (req, res) => {
+    conn.connectToServer((err) => {
+        if(err) throw err;
+        const { name, school, type } = req.body;
+
+        if(name!="" && school!="" && type!="") {
+            conn.getDb().collection("classDetails").insertOne({name: name, school: school, type: type}, (err1, res1)=> {
+                if(err1) throw err1;
+                res.send(res1);
+                console.log(res1);
+            });
+        } else {
+            res.send("Please enter values for Name, School and Type");
+        }
+    });
+});
+
+router.post('/modifyDetails', (req, res) => {
+    conn.connectToServer((err) => {
+        if(err) throw err;
+        const { name, school, type, flag } = req.body;
+
+        if(name!="" && type!="") {
+            if(flag=="U") {
+                conn.getDb().collection("classDetails").updateOne({type: type}, {$set: {name: name}}, (err1, res1)=> {
+                    if(err1) throw err1;
+                    res.send(res1);
+                    console.log(res1);
+                });
+            } else {
+                conn.getDb().collection("classDetails").deleteOne({type: type}, (err1, res1)=> {
+                    if(err1) throw err1;
+                    res.send(res1);
+                    console.log(res1);
+                });
+            }
+        }
+    });
+});
+
+router.post('/updateDetails', (req, res) => {
+    conn.connectToServer((err) => {
+        if(err) throw err;
+        const { name, school, type } = req.body;
+
+        if(name!="" && type!="") {
+            conn.getDb().collection("classDetails").updateOne({type: type}, {$set: {name: name}}, (err1, res1)=> {
+                if(err1) throw err1;
+                res.send(res1);
+                console.log(res1);
+            });
+        }
+    });
+});
+
+router.post('/deleteDetails', (req, res) => {
+    conn.connectToServer((err) => {
+        if(err) throw err;
+        const { type } = req.body;
+
+        if(type!="") {
+            conn.getDb().collection("classDetails").deleteOne({type: type}, (err1, res1)=> {
+                if(err1) throw err1;
+                res.send(res1);
+                console.log(res1);
+            });
+        }
+    });
+});
+
+router.post('/showDetails', (req, res) => {
+    conn.connectToServer((err) => {
+        if(err) throw err;
+        const { name, school, type } = req.body;
+
+        if(name!="") {
+            conn.getDb().collection("classDetails").find({name: name}).toArray((err1, res1)=> {
+                if(err1) throw err1;
+                res.send(res1);
+                console.log(res1);
+            });
+        }
+        if(school!="") {
+            conn.getDb().collection("classDetails").find({school: school}).toArray((err1, res1)=> {
+                if(err1) throw err1;
+                res.send(res1);
+                console.log(res1);
+            });
+        }
+        
+    });
+});
+
 
 router.get('/createCollection', (req, res)=> {
     conn.connectToServer(async (err) => {
